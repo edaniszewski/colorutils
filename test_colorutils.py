@@ -17,15 +17,25 @@ class ColorUtilsTestCase(unittest.TestCase):
         _c2 = Color((50, 175, 30))
         self.assertEqual(Color((60, 255, 255)), _c1 + _c2)
 
+        _c1 = Color((10, 10, 10))
+        self.assertEqual(Color((30, 30, 30)), _c1 + (20, 20, 20))
+
     def test_color_addition_exception(self):
         _c1 = Color((35, 150, 35))
 
         with self.assertRaises(TypeError):
             _c1 + 150
-            _c1 + (150, 35, 150)
+
+        with self.assertRaises(TypeError):
             _c1 + 'a'
+
+        with self.assertRaises(TypeError):
             _c1 + 13.0
+
+        with self.assertRaises(TypeError):
             _c1 + ['1', '2']
+
+        with self.assertRaises(TypeError):
             _c1 + {1: 'a', 2: 'b'}
 
     def test_color_subtraction_success(self):
@@ -41,15 +51,25 @@ class ColorUtilsTestCase(unittest.TestCase):
         _c2 = Color((10, 100, 255))
         self.assertEqual(Color((40, 75, 0)), _c1 - _c2)
 
+        _c1 = Color((30, 30, 30))
+        self.assertEqual(Color((10, 10, 10)), _c1 - (20, 20, 20))
+
     def test_color_subtraction_exception(self):
         _c1 = Color((35, 150, 35))
 
         with self.assertRaises(TypeError):
             _c1 - 150
-            _c1 - (150, 35, 150)
+
+        with self.assertRaises(TypeError):
             _c1 - 'a'
+
+        with self.assertRaises(TypeError):
             _c1 - 13.0
+
+        with self.assertRaises(TypeError):
             _c1 - ['1', '2']
+
+        with self.assertRaises(TypeError):
             _c1 - {1: 'a', 2: 'b'}
 
     def test_rgb_equality_fn(self):

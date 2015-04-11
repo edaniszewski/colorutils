@@ -112,11 +112,16 @@ class Color(object):
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
-            if self.arithmetic is ArithmeticModel.LIGHT:
-                return Color((min(r1 + r2, rgb_max_val), min(g1 + g2, rgb_max_val), min(b1 + b2, rgb_max_val)))
-            else:
-                return Color(((r1 + r2 // 2), (g1 + g2 // 2), (b1 + b2 // 2)))
-        raise TypeError("Unsupported operand type(s) for +: '{0}' and '{1}'".format(type(self), type(other)))
+        elif isinstance(other, tuple) and len(other) == 3:
+            r1, g1, b1 = self.rgb
+            r2, g2, b2 = other
+        else:
+            raise TypeError("Unsupported operand type(s) for +: '{0}' and '{1}'".format(type(self), type(other)))
+
+        if self.arithmetic is ArithmeticModel.LIGHT:
+            return Color((min(r1 + r2, rgb_max_val), min(g1 + g2, rgb_max_val), min(b1 + b2, rgb_max_val)))
+        else:
+            return Color(((r1 + r2 // 2), (g1 + g2 // 2), (b1 + b2 // 2)))
 
     def __sub__(self, other):
         """
@@ -128,8 +133,13 @@ class Color(object):
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
-            return Color((max(r1 - r2, rgb_min_val), max(g1 - g2, rgb_min_val), max(b1 - b2, rgb_min_val)))
-        raise TypeError("Unsupported operand type(s) for -: '{0}' and '{1}'".format(type(self), type(other)))
+        elif isinstance(other, tuple) and len(other) == 3:
+            r1, g1, b1 = self.rgb
+            r2, g2, b2 = other
+        else:
+            raise TypeError("Unsupported operand type(s) for -: '{0}' and '{1}'".format(type(self), type(other)))
+
+        return Color((max(r1 - r2, rgb_min_val), max(g1 - g2, rgb_min_val), max(b1 - b2, rgb_min_val)))
 
     def __str__(self):
         """

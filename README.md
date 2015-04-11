@@ -46,10 +46,10 @@ Color(web='#0ff')
 ```
 
 #### `Color` Addition and Subtraction
-Although the addition and subtraction of color does not always make sense, the ability to do so is supported. There are
-two additive models currently supported: `LIGHT` and `BLEND`. 
+Although the addition and subtraction of color does not always make sense, the ability to do so is supported. There are two additive models currently supported: `LIGHT` and `BLEND`. 
 
 `LIGHT`::
+
 the light model is an additive model, where the rgb components are added, but do not exceed the maximum value, 255. This model is the default model which every `Color` is initialized with, unless overridden.
 
 ```
@@ -58,6 +58,7 @@ the light model is an additive model, where the rgb components are added, but do
 ```
 
 `BLEND`::
+
 the blend model is an averaging model, where each rgb component is averaged.
 
 ```
@@ -72,4 +73,12 @@ There is currently only one subtractive model, the equivalent to the inverse of 
 ```
 >>> Color((100, 100, 100)) - Color((0, 75, 200))
 <Color (100, 25, 0)>
+```
+
+`Color` objects can also be added and subtracted from 3-tuples, which represent an `RGB` value:
+```
+>>> Color((50, 50, 50)) + (20, 20, 20)
+<Color (70, 70, 70)>
+>>> Color((50, 50, 50)) - (20, 20, 20)
+<Color (30, 30, 30)>
 ```
