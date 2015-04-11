@@ -393,6 +393,94 @@ rgb_min = (0, 0, 0)
 rgb_max = (255, 255, 255)
 
 # -----------------------------------------------
+# Conversion Functions
+# -----------------------------------------------
+
+def rgb_to_hex(rgb):
+    """
+    Convert a tuple containing RGB values into a corresponding HEX representation.
+
+    :param rgb:
+    :return:
+    """
+    r, g, b = rgb
+    return "#{0}{1}{2}".format(hex(r)[2:].zfill(2), hex(g)[2:].zfill(2), hex(b)[2:].zfill(2))
+
+
+def rgb_to_web(rgb):
+    """
+    Convert a RGB color tuple into a WEB color representation, being either a well-known color name if supported, or
+    the equivalent HEX value.
+
+    :param rgb:
+    :return:
+    """
+    try:
+        return web_colors[rgb]
+    except KeyError:
+        return rgb_to_hex(rgb)
+
+
+def hex_to_rgb(_hex):
+    """
+    Convert a HEX color string into a tuple containing corresponding RGB values.
+
+    :param _hex:
+    :type _hex: str
+    :return:
+    """
+    _hex = _hex.strip('#')
+    n = len(_hex) // 3
+    if len(_hex) == 3:
+        r = int(_hex[:n]*2, 16)
+        g = int(_hex[n:2 * n]*2, 16)
+        b = int(_hex[2 * n:3 * n]*2, 16)
+    else:
+        r = int(_hex[:n], 16)
+        g = int(_hex[n:2 * n], 16)
+        b = int(_hex[2 * n:3 * n], 16)
+    return r, g, b
+
+
+def hex_to_web(_hex):
+    """
+    Convert a HEX color string into a WEB color representation.
+
+    :param _hex:
+    :return:
+    """
+    try:
+        return web_colors[hex_to_rgb(_hex)]
+    except KeyError:
+        return _hex
+
+
+def web_to_rgb(web):
+    """
+    Convert a WEB color representation into an RGB color tuple.
+
+    :param web:
+    :return:
+    """
+    try:
+        return web_colors[web.lower()]
+    except KeyError:
+        return hex_to_rgb(web)
+
+
+def web_to_hex(web):
+    """
+    Convert a WEB color representation into a HEX color string.
+
+    :param web:
+    :return:
+    """
+    try:
+        return rgb_to_hex(web_colors[web])
+    except KeyError:
+        return web
+
+# -----------------------------------------------
 # Utility Functions
 # -----------------------------------------------
 
@@ -434,62 +522,13 @@ def random_hex():
     return rgb_to_hex(random_rgb())
 
 
-def rgb_to_hex(rgb):
+def random_web():
     """
-    Convert a tuple containing RGB values into a corresponding HEX representation.
+    Generate a random WEB value.
 
-    :param rgb:
     :return:
     """
-    r, g, b = rgb
-    return "#{0}{1}{2}".format(hex(r)[2:].zfill(2), hex(g)[2:].zfill(2), hex(b)[2:].zfill(2))
-
-
-def hex_to_rgb(_hex):
-    """
-    Convert a HEX color string into a tuple containing corresponding RGB values.
-
-    :param _hex:
-    :type _hex: str
-    :return:
-    """
-    _hex = _hex.strip('#')
-    n = len(_hex) // 3
-    if len(_hex) == 3 :
-        r = int(_hex[:n]*2, 16)
-        g = int(_hex[n:2 * n]*2, 16)
-        b = int(_hex[2 * n:3 * n]*2, 16)
-    else:
-        r = int(_hex[:n], 16)
-        g = int(_hex[n:2 * n], 16)
-        b = int(_hex[2 * n:3 * n], 16)
-    return r, g, b
-
-def rgb_to_web(rgb):
-    """
-    Convert a RGB color tuple into a WEB color representation, being either a well-known color name if supported, or
-    the equivalent HEX value.
-
-    :param rgb:
-    :return:
-    """
-    try:
-        return web_colors[rgb]
-    except KeyError:
-        return rgb_to_hex(rgb)
-
-
-def web_to_rgb(web):
-    """
-    Convert a WEB color representation into an RGB color tuple.
-
-    :param web:
-    :return:
-    """
-    try:
-        return web_colors[web.lower()]
-    except KeyError:
-        return hex_to_rgb(web)
+    return rgb_to_web(random_rgb())
 
 
 def minify_hex(_hex):
