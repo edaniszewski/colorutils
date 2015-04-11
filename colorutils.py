@@ -387,7 +387,7 @@ web_colors = {
 }
 
 # Appends the reverse web_colors dictionary to web_colors, so reverse lookups are allowed
-web_colors.update(dict([reversed(i) for i in web_colors.items()]))
+web_colors.update(dict([(v.lower(), k) for k, v in web_colors.items()]))
 
 rgb_min_val = 0
 rgb_max_val = 255
@@ -486,7 +486,7 @@ def web_to_rgb(web):
     :return:
     """
     try:
-        return web_colors[web]
+        return web_colors[web.lower()]
     except KeyError:
         return hex_to_rgb(web)
 
