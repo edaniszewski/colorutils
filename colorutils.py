@@ -76,10 +76,8 @@ class Color(object):
 
         if isinstance(color, Color):
             self._color = color._color
-        elif isinstance(color, tuple):
-            self._color = color if color else rgb_min
         else:
-            raise TypeError('Color parameter must be either a Color object or 3-tuple')
+            self._color = color if color else rgb_min
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -457,12 +455,15 @@ def hex_to_rgb(_hex):
     """
     _hex = _hex.strip('#')
     n = len(_hex) // 3
-
-    r = int(_hex[:n], 16)
-    g = int(_hex[n:2 * n], 16)
-    b = int(_hex[2 * n:3 * n], 16)
+    if len(_hex) == 3 :
+        r = int(_hex[:n]*2, 16)
+        g = int(_hex[n:2 * n]*2, 16)
+        b = int(_hex[2 * n:3 * n]*2, 16)
+    else:
+        r = int(_hex[:n], 16)
+        g = int(_hex[n:2 * n], 16)
+        b = int(_hex[2 * n:3 * n], 16)
     return r, g, b
-
 
 def rgb_to_web(rgb):
     """
