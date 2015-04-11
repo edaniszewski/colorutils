@@ -64,6 +64,13 @@ class Color(object):
     specified. The supported models are found in the ArithmeticModel class.
     """
     def __init__(self, color=None, **kwargs):
+        """
+        Initialization
+
+        :param color:
+        :param kwargs:
+        :return:
+        """
         self.equality_fn = RGB_eq
         self.arithmetic = ArithmeticModel.LIGHT
 
@@ -78,14 +85,32 @@ class Color(object):
             setattr(self, k, v)
 
     def __eq__(self, other):
+        """
+        Equals
+
+        :param other:
+        :return:
+        """
         if isinstance(other, Color):
             return self.equality_fn(self, other)
         return False
 
     def __ne__(self, other):
+        """
+        Not Equals
+
+        :param other:
+        :return:
+        """
         return not self.__eq__(other)
 
     def __add__(self, other):
+        """
+        Addition
+
+        :param other:
+        :return:
+        """
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
@@ -96,6 +121,12 @@ class Color(object):
         raise TypeError("Unsupported operand type(s) for +: '{0}' and '{1}'".format(type(self), type(other)))
 
     def __sub__(self, other):
+        """
+        Subtraction
+
+        :param other:
+        :return:
+        """
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
@@ -103,9 +134,19 @@ class Color(object):
         raise TypeError("Unsupported operand type(s) for -: '{0}' and '{1}'".format(type(self), type(other)))
 
     def __str__(self):
+        """
+        String representation
+
+        :return:
+        """
         return "{}".format(self._color)
 
     def __repr__(self):
+        """
+        General representation
+
+        :return:
+        """
         return "<Color {}>".format(self._color)
 
     @property
