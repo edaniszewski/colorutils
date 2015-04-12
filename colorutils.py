@@ -490,28 +490,40 @@ def web_to_hex(web):
     except KeyError:
         return web
 
+
+def rgb_to_yiq(rgb):
+    """
+    Convert an RGB color tuple into the YIQ color representation.
+
+    :param rgb:
+    :return:
+    """
+    try:
+        r, g, b = rgb
+        y = (0.299 * r) + (0.587 * g) + (0.114 * b)
+        i = (0.596 * r) + (-0.275 * g) + (-0.321 * b)
+        q = (0.212 * r) + (-0.528 * g) + (0.311 * b)
+        return y, i, q
+    except Exception as e:
+        raise ColorException('Unable to convert RGB to YIQ: ' + e.message)
+
 # -----------------------------------------------
 # Utility Functions
 # -----------------------------------------------
 
-def text_color(self, rgb):
+def text_color(background, dark_color=rgb_min, light_color=rgb_max):
     """
+    Given a background color in the form of an RGB 3-tuple, returns the color the text should be (defaulting to white
+    and black) for best readability. The light (white) and dark (black) defaults can be overridden to return preferred
+    values.
 
-    :param rgb:
+    :param background:
+    :param dark_color:
+    :param light_color:
     :return:
     """
-    max_y = self.rgb_to_yiq(rgb_max)
-    return rgb_max if self.rgb_to_yiq(rgb) <= max_y / 2 else rgb_min
-
-
-def rgb_to_yiq(rgb):
-    """
-
-    :param rgb:
-    :return:
-    """
-    r, g, b = rgb
-    return (299 * r) + (587 * g) + (114 * b)
+    max_y = rgb_to_yiq(rgb_max)[0]
+    return light_color if rgb_to_yiq(background)[0] <= max_y / 2 else dark_color
 
 
 def random_rgb():
