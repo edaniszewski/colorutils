@@ -511,6 +511,86 @@ def rgb_to_yiq(rgb):
 # Utility Functions
 # -----------------------------------------------
 
+# - - - - - - - - - - - - - - -
+# Random Color Functions
+# - - - - - - - - - - - - - - -
+
+def uniform_random_rgb():
+    """
+    Generate a uniformly random RGB value.
+
+    :return: A tuple of three integers with values between 0 and 255 inclusive
+    """
+    return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+
+
+def uniform_random_hex():
+    """
+    Generate a uniformly random HEX value.
+
+    :return: A string representing a random HEX value between 000000 and FFFFFF inclusive
+    """
+    return rgb_to_hex(uniform_random_rgb())
+
+
+def uniform_random_web():
+    """
+    Generate a uniformly random WEB value.
+
+    :return:
+    """
+    return rgb_to_web(uniform_random_rgb())
+
+
+def offset_random_rgb(seed, amount=1):
+    """
+    Given a seed color, generate a specified number of random colors (1 color by default) determined by a randomized
+    offset from the seed.
+
+    :param seed:
+    :param amount:
+    :return:
+    """
+    r, g, b = seed
+
+    results = []
+    for _ in range(amount):
+        base_val = ((r + g + b) / 3) + 1  # Add one to eliminate case where the base value would otherwise be 0
+        new_val = base_val + (random.random() * rgb_max_val / 5)  # Randomly offset with an arbitrary multiplier
+        ratio = new_val / base_val
+        results.append((min(int(r*ratio), rgb_max_val), min(int(g*ratio), rgb_max_val), min(int(b*ratio), rgb_max_val)))
+
+    return results[0] if len(results) > 1 else results
+
+
+def offset_random_hex(seed, amount=1):
+    """
+    Given a seed color, generate a specified number of random colors (1 color by default) determined by a randomized
+    offset from the seed.
+
+    :param seed:
+    :param amount:
+    :return:
+    """
+    return rgb_to_hex(offset_random_rgb(seed, amount))
+
+
+def offset_random_web(seed, amount=1):
+    """
+    Given a seed color, generate a specified number of random colors (1 color by default) determined by a randomized
+    offset from the seed.
+
+    :param seed:
+    :param amount:
+    :return:
+    """
+    return rgb_to_web(offset_random_rgb(seed, amount))
+
+
+# - - - - - - - - - - - - - - -
+# Other Color Functions
+# - - - - - - - - - - - - - - -
+
 def text_color(background, dark_color=rgb_min, light_color=rgb_max):
     """
     Given a background color in the form of an RGB 3-tuple, returns the color the text should be (defaulting to white
@@ -524,33 +604,6 @@ def text_color(background, dark_color=rgb_min, light_color=rgb_max):
     """
     max_y = rgb_to_yiq(rgb_max)[0]
     return light_color if rgb_to_yiq(background)[0] <= max_y / 2 else dark_color
-
-
-def random_rgb():
-    """
-    Generate a random RGB value.
-
-    :return: A tuple of three integers with values between 0 and 255 inclusive
-    """
-    return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-
-
-def random_hex():
-    """
-    Generate a random HEX value.
-
-    :return: A string representing a random HEX value between 000000 and FFFFFF inclusive
-    """
-    return rgb_to_hex(random_rgb())
-
-
-def random_web():
-    """
-    Generate a random WEB value.
-
-    :return:
-    """
-    return rgb_to_web(random_rgb())
 
 
 def minify_hex(_hex):
