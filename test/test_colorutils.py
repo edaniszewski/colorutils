@@ -1,5 +1,5 @@
 import unittest
-from colorutils import *
+from colorutils.colorutils import *
 
 
 class ColorUtilsTestCase(unittest.TestCase):
@@ -36,7 +36,6 @@ class ColorUtilsTestCase(unittest.TestCase):
         # Dark gray background
         background = (75, 75, 75)
         self.assertEqual((255, 255, 255), text_color(background))
-
 
     def test_color_addition_success(self):
         _c1 = Color((35, 150, 35))
@@ -156,17 +155,17 @@ class ColorUtilsTestCase(unittest.TestCase):
         self.assertEqual((25, 25, 25), _c2.rgb)
         self.assertEqual((10, 10, 10), _c3.rgb)
 
-    def test_random_rgb(self):
+    def test_uniform_random_rgb(self):
         for _ in range(10000):
-            r, b, g = random_rgb()
+            r, b, g = uniform_random_rgb()
             self.assertTrue(0 <= r <= 255)
             self.assertTrue(0 <= g <= 255)
             self.assertTrue(0 <= b <= 255)
 
-    def test_random_hex(self):
+    def test_uniform_random_hex(self):
         test_set = '0123456789abcdef'
         for _ in range(10000):
-            for char in random_hex()[1:]:
+            for char in uniform_random_hex()[1:]:
                 self.assertTrue(char in test_set)
 
     def test_rgb_to_web(self):
@@ -221,7 +220,6 @@ class ColorUtilsTestCase(unittest.TestCase):
         self.assertEqual("#0d9f40", rgb_to_web((13, 159, 64)))
         self.assertEqual("#4302d5", rgb_to_web((67, 2, 213)))
         self.assertEqual("#2f2f2f", rgb_to_web((47, 47, 47)))
-
 
     def test_web_to_rgb(self):
         # Black
