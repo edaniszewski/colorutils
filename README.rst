@@ -2,9 +2,28 @@
 colorutils
 ==========
 
+.. image:: https://pypip.in/license/colorutils/badge.svg
+    :target: https://pypi.python.org/pypi/colorutils/
+    :alt: License
+    
+.. image:: https://pypip.in/version/colorutils/badge.svg
+    :target: https://pypi.python.org/pypi/colorutils/
+    :alt: Latest Version
+    
+.. image:: https://pypip.in/download/colorutils/badge.svg
+    :target: https://pypi.python.org/pypi//colorutils/
+    :alt: Downloads
+
 A library which provides utilities for working with colors in Python. Colors are modeled by the ``Color`` class and can be
 represented in ``RGB``, ``HEX``, and ``WEB`` formats.
 
+Installation
+============
+
+``colorutils`` can be installed from pypi::
+
+    pip install colorutils
+    
 
 Current Features
 ================
