@@ -1,3 +1,5 @@
+import colorutils
+
 __author__ = "Erick Daniszewski"
 __email__ = "edaniszewski@gmail.com"
 

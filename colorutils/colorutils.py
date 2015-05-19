@@ -1,26 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 A Color Utility Library
 -----------------------
-Author: Erick Daniszewski
-Version: 0.1
-
 colorutils provides utilities for working with colors, which are abstractly modeled by the Color class. The Color class
 currently uses an internal RGB representation, but has allowances for RGB, HEX, and WEB formats.
-
-Current capabilities include:
- * abstract color model
- * color format conversion
- * random color generation
 """
 from __future__ import division
 import random
 
-
-class ColorException(Exception):
-    """
-    General exception thrown for color utils non-exit exceptions.
-    """
-    pass
+from exceptions import *
+from static import *
+from equality import *
 
 
 class Format:
@@ -64,13 +55,7 @@ class Color(object):
     specified. The supported models are found in the ArithmeticModel class.
     """
     def __init__(self, color=None, **kwargs):
-        """
-        Initialization
-
-        :param color:
-        :param kwargs:
-        :return:
-        """
+        """ Initialization """
         self.equality_fn = RGB_eq
         self.arithmetic = ArithmeticModel.LIGHT
 
@@ -83,32 +68,17 @@ class Color(object):
             setattr(self, k, v)
 
     def __eq__(self, other):
-        """
-        Equals
-
-        :param other:
-        :return:
-        """
+        """ Equals """
         if isinstance(other, Color):
             return self.equality_fn(self, other)
         return False
 
     def __ne__(self, other):
-        """
-        Not Equals
-
-        :param other:
-        :return:
-        """
+        """ Not Equals """
         return not self.__eq__(other)
 
     def __add__(self, other):
-        """
-        Addition
-
-        :param other:
-        :return:
-        """
+        """ Addition """
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
@@ -124,12 +94,7 @@ class Color(object):
             return Color(((r1 + r2 // 2), (g1 + g2 // 2), (b1 + b2 // 2)))
 
     def __sub__(self, other):
-        """
-        Subtraction
-
-        :param other:
-        :return:
-        """
+        """ Subtraction """
         if isinstance(other, Color):
             r1, g1, b1 = self.rgb
             r2, g2, b2 = other.rgb
@@ -141,20 +106,16 @@ class Color(object):
 
         return Color((max(r1 - r2, rgb_min_val), max(g1 - g2, rgb_min_val), max(b1 - b2, rgb_min_val)))
 
-    def __str__(self):
-        """
-        String representation
+    def __iter__(self):
+        """ Iterator """
+        return iter(self._color)
 
-        :return:
-        """
+    def __str__(self):
+        """ String representation """
         return "{}".format(self._color)
 
     def __repr__(self):
-        """
-        General representation
-
-        :return:
-        """
+        """ General representation """
         return "<Color {}>".format(self._color)
 
     @property
@@ -166,7 +127,7 @@ class Color(object):
 
     @red.setter
     def red(self, value):
-        self._color = (value,) + self._color[1:]
+        self._color[0] = value
 
     @property
     def green(self):
@@ -177,7 +138,7 @@ class Color(object):
 
     @green.setter
     def green(self, value):
-        self._color = self._color[:1] + (value,) + self._color[2:]
+        self._color[1] = value
 
     @property
     def blue(self):
@@ -188,7 +149,7 @@ class Color(object):
 
     @blue.setter
     def blue(self, value):
-        self._color = self._color[:2] + (value,)
+        self._color[2] = value
 
     @property
     def rgb(self):
@@ -230,181 +191,11 @@ class Color(object):
     def web(self, value):
         self._color = web_to_rgb(value)
 
-# -----------------------------------------------
-# Color Equality
-# -----------------------------------------------
-
-## RGB Equalities
-RGB_eq = lambda c1, c2: c1.rgb == c2.rgb
-RED_eq = lambda c1, c2: c1.red == c2.red
-GREEN_eq = lambda c1, c2: c1.green == c2.green
-BLUE_eq = lambda c1, c2: c1.blue == c2.blue
-
-## HEX Equalities
-HEX_eq = lambda c1, c2: c1.hex == c2.hex
-
-## WEB Equalities
-WEB_eq = lambda c1, c2: c1.web == c2.web
-
-# -----------------------------------------------
-# Global Declarations
-# -----------------------------------------------
-
-web_colors = {
-    (255, 192, 203): 'Pink',
-    (255, 182, 193): 'LightPink',
-    (255, 105, 180): 'HotPink',
-    (255, 20, 147): 'DeepPink',
-    (219, 112, 147): 'PaleVioletRed',
-    (199, 21, 133): 'MediumVioletRed',
-    (255, 160, 122): 'LightSalmon',
-    (250, 128, 114): 'Salmon',
-    (233, 150, 122): 'DarkSalmon',
-    (240, 128, 128): 'LightCoral',
-    (205, 92, 92): 'IndianRed',
-    (220, 20, 60): 'Crimson',
-    (178, 34, 34): 'FireBrick',
-    (139, 0, 0): 'DarkRed',
-    (255, 0, 0): 'Red',
-    (255, 69, 0): 'OrangeRed',
-    (255, 99, 71): 'Tomato',
-    (255, 127, 80): 'Coral',
-    (255, 140, 0): 'DarkOrange',
-    (255, 165, 0): 'Orange',
-    (255, 255, 0): 'Yellow',
-    (255, 255, 224): 'LightYellow',
-    (255, 250, 205): 'LemonChiffon',
-    (250, 250, 210): 'LightGoldenrodYellow',
-    (255, 239, 213): 'PapayaWhip',
-    (255, 228, 181): 'Moccasin',
-    (255, 218, 185): 'PeachPuff',
-    (238, 232, 170): 'PaleGoldenrod',
-    (240, 230, 140): 'Khaki',
-    (189, 183, 107): 'DarkKhaki',
-    (255, 215, 0): 'Gold',
-    (255, 248, 220): 'Cornsilk',
-    (255, 235, 205): 'BlanchedAlmond',
-    (255, 228, 196): 'Bisque',
-    (255, 222, 173): 'NavajoWhite',
-    (245, 222, 179): 'Wheat',
-    (222, 184, 135): 'BurlyWood',
-    (210, 180, 140): 'Tan',
-    (188, 143, 143): 'RosyBrown',
-    (244, 164, 96): 'SandyBrown',
-    (218, 165, 32): 'Goldenrod',
-    (184, 134, 11): 'DarkGoldenrod',
-    (205, 133, 63): 'Peru',
-    (210, 105, 30): 'Chocolate',
-    (139, 69, 19): 'SaddleBrown',
-    (160, 82, 45): 'Sienna',
-    (165, 42, 42): 'Brown',
-    (128, 0, 0): 'Maroon',
-    (85, 107, 47): 'DarkOliveGreen',
-    (128, 128, 0): 'Olive',
-    (107, 142, 35): 'OliveDrab',
-    (154, 205, 50): 'YellowGreen',
-    (50, 205, 50): 'LimeGreen',
-    (0, 255, 0): 'Lime',
-    (124, 252, 0): 'LawnGreen',
-    (127, 255, 0): 'Chartreuse',
-    (173, 255, 47): 'GreenYellow',
-    (0, 255, 127): 'SpringGreen',
-    (0, 250, 154): 'MediumSpringGreen',
-    (144, 238, 144): 'LightGreen',
-    (152, 251, 152): 'PaleGreen',
-    (143, 188, 143): 'DarkSeaGreen',
-    (60, 179, 113): 'MediumSeaGreen',
-    (46, 139, 87): 'SeaGreen',
-    (34, 139, 34): 'ForestGreen',
-    (0, 128, 0): 'Green',
-    (0, 100, 0): 'DarkGreen',
-    (102, 205, 170): 'MediumAquamarine',
-    (0, 255, 255): 'Aqua',
-    (0, 255, 255): 'Cyan',
-    (224, 255, 255): 'LightCyan',
-    (175, 238, 238): 'PaleTurquoise',
-    (127, 255, 212): 'Aquamarine',
-    (64, 224, 208): 'Turquoise',
-    (72, 209, 204): 'MediumTurquoise',
-    (0, 206, 209): 'DarkTurquoise',
-    (32, 178, 170): 'LightSeaGreen',
-    (95, 158, 160): 'CadetBlue',
-    (0, 139, 139): 'DarkCyan',
-    (0, 128, 128): 'Teal',
-    (176, 196, 222): 'LightSteelBlue',
-    (176, 224, 230): 'PowderBlue',
-    (173, 216, 230): 'LightBlue',
-    (135, 206, 235): 'SkyBlue',
-    (135, 206, 250): 'LightSkyBlue',
-    (0, 191, 255): 'DeepSkyBlue',
-    (30, 144, 255): 'DodgerBlue',
-    (100, 149, 237): 'CornflowerBlue',
-    (70, 130, 180): 'SteelBlue',
-    (65, 105, 225): 'RoyalBlue',
-    (0, 0, 255): 'Blue',
-    (0, 0, 205): 'MediumBlue',
-    (0, 0, 139): 'DarkBlue',
-    (0, 0, 128): 'Navy',
-    (25, 25, 112): 'MidnightBlue',
-    (230, 230, 250): 'Lavender',
-    (216, 191, 216): 'Thistle',
-    (221, 160, 221): 'Plum',
-    (238, 130, 238): 'Violet',
-    (218, 112, 214): 'Orchid',
-    (255, 0, 255): 'Fuchsia',
-    (255, 0, 255): 'Magenta',
-    (186, 85, 211): 'MediumOrchid',
-    (147, 112, 219): 'MediumPurple',
-    (138, 43, 226): 'BlueViolet',
-    (148, 0, 211): 'DarkViolet',
-    (153, 50, 204): 'DarkOrchid',
-    (139, 0, 139): 'DarkMagenta',
-    (128, 0, 128): 'Purple',
-    (75, 0, 130): 'Indigo',
-    (72, 61, 139): 'DarkSlateBlue',
-    (102, 51, 153): 'RebeccaPurple',
-    (106, 90, 205): 'SlateBlue',
-    (123, 104, 238): 'MediumSlateBlue',
-    (255, 255, 255): 'White',
-    (255, 250, 250): 'Snow',
-    (240, 255, 240): 'Honeydew',
-    (245, 255, 250): 'MintCream',
-    (240, 255, 255): 'Azure',
-    (240, 248, 255): 'AliceBlue',
-    (248, 248, 255): 'GhostWhite',
-    (245, 245, 245): 'WhiteSmoke',
-    (255, 245, 238): 'Seashell',
-    (245, 245, 220): 'Beige',
-    (253, 245, 230): 'OldLace',
-    (255, 250, 240): 'FloralWhite',
-    (255, 255, 240): 'Ivory',
-    (250, 235, 215): 'AntiqueWhite',
-    (250, 240, 230): 'Linen',
-    (255, 240, 245): 'LavenderBlush',
-    (255, 228, 225): 'MistyRose',
-    (220, 220, 220): 'Gainsboro',
-    (211, 211, 211): 'LightGrey',
-    (192, 192, 192): 'Silver',
-    (169, 169, 169): 'DarkGray',
-    (128, 128, 128): 'Gray',
-    (105, 105, 105): 'DimGray',
-    (119, 136, 153): 'LightSlateGray',
-    (112, 128, 144): 'SlateGray',
-    (47, 79, 79): 'DarkSlateGray',
-    (0, 0, 0): 'Black'
-}
-
-# Appends the reverse web_colors dictionary to web_colors, so reverse lookups are allowed
-web_colors.update(dict([(v.lower(), k) for k, v in web_colors.items()]))
-
-rgb_min_val = 0
-rgb_max_val = 255
-rgb_min = (0, 0, 0)
-rgb_max = (255, 255, 255)
 
 # -----------------------------------------------
 # Conversion Functions
 # -----------------------------------------------
+
 
 def rgb_to_hex(rgb):
     """
@@ -515,6 +306,7 @@ def rgb_to_yiq(rgb):
 # Random Color Functions
 # - - - - - - - - - - - - - - -
 
+
 def uniform_random_rgb():
     """
     Generate a uniformly random RGB value.
@@ -590,6 +382,39 @@ def offset_random_web(seed, amount=1):
 # - - - - - - - - - - - - - - -
 # Other Color Functions
 # - - - - - - - - - - - - - - -
+
+
+def color_run(start_color, end_color, step_count, inclusive=True, to_color=True):
+    """
+    Given a start color, end color, and a number of steps, returns a list of colors which represent a 'scale' between
+    the start and end color.
+
+    :param start_color: The color starting the run
+    :param end_color: The color ending the run
+    :param step_count: The number of colors to have between the start and end color
+    :param inclusive: Flag determining whether to include start and end values in run (default True)
+    :param to_color: Flag indicating return values should be Color objects (default True)
+    :return: List of colors between the start and end color
+    :rtype: list
+    """
+    if isinstance(start_color, Color):
+        start_color = start_color.rgb
+
+    if isinstance(end_color, Color):
+        end_color = end_color.rgb
+
+    step = tuple((end_color[i] - start_color[i])/step_count for i in range(3))
+
+    add = lambda x, y: tuple(sum(z) for z in zip(x, y))
+    mult = lambda x, y: tuple(y * z for z in x)
+
+    run = [add(start_color, mult(step, i)) for i in range(1, step_count)]
+
+    if inclusive:
+        run = [start_color] + run + [end_color]
+
+    return run if not to_color else [Color(c) for c in run]
+
 
 def text_color(background, dark_color=rgb_min, light_color=rgb_max):
     """
