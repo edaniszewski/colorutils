@@ -1,5 +1,5 @@
 import unittest
-from colorutils.colorutils import *
+from colorutils import *
 
 
 class ColorUtilsTestCase(unittest.TestCase):
