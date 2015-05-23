@@ -9,22 +9,17 @@ currently uses an internal RGB representation, but has allowances for RGB, HEX, 
 from __future__ import division
 import random
 
-from exceptions import *
 from static import *
-from equality import *
+from equality import RGB_eq
+from convert import *
 
 
 class Format:
     """
     Format contains well-known color formats which are supported by the Color class. This class is effectively
     an implementation of Enum for Python 2.7
-
-    The color formats currently supported include:
-        RGB : an additive color model using red, green, and blue decimal values
-        HEX : the RGB model represented in hexadecimal
-        WEB : colors used by web browsers, contains both color names and HEX
     """
-    RGB, HEX, WEB = range(3)
+    RGB, HEX, WEB, YIQ, HSV = range(5)
 
 
 class ArithmeticModel:
@@ -120,9 +115,7 @@ class Color(object):
 
     @property
     def red(self):
-        """
-        The red component of the RGB color representation.
-        """
+        """ The red component of the RGB color representation. """
         return self._color[0]
 
     @red.setter
@@ -131,9 +124,7 @@ class Color(object):
 
     @property
     def green(self):
-        """
-        The green component of the RGB color representation.
-        """
+        """ The green component of the RGB color representation. """
         return self._color[1]
 
     @green.setter
@@ -142,9 +133,7 @@ class Color(object):
 
     @property
     def blue(self):
-        """
-        The blue component of the RGB color representation.
-        """
+        """ The blue component of the RGB color representation. """
         return self._color[2]
 
     @blue.setter
@@ -153,9 +142,7 @@ class Color(object):
 
     @property
     def rgb(self):
-        """
-        A 3-tuple containing int values representing red, blue, and green.
-        """
+        """ An RGB representation of the color. """
         return self._color
 
     @rgb.setter
@@ -164,9 +151,7 @@ class Color(object):
 
     @property
     def hex(self):
-        """
-        A 6-char hexidecimal string representation of the RGB value, with a prepended octothorpe.
-        """
+        """ A 6-char HEX representation of the color, with a prepended octothorpe. """
         return rgb_to_hex(self.rgb)
 
     @hex.setter
@@ -175,128 +160,36 @@ class Color(object):
 
     @property
     def shorthex(self):
-        """
-        The same as Color.hex, however, HEX values that can be minified to 3-char are returned as such.
-        """
+        """ The same as Color.hex, however, HEX values that can be minified to 3-char are returned as such. """
         return minify_hex(self.hex)
 
     @property
     def web(self):
-        """
-        A WEB representation of the RGB color. This could be a well-known color name string or a HEX representation.
-        """
+        """ A WEB representation of the color. """
         return rgb_to_web(self.rgb)
 
     @web.setter
     def web(self, value):
         self._color = web_to_rgb(value)
 
+    @property
+    def yiq(self):
+        """ A YIQ representation of the color. """
+        return rgb_to_yiq(self.rgb)
 
-# -----------------------------------------------
-# Conversion Functions
-# -----------------------------------------------
+    @yiq.setter
+    def yiq(self, value):
+        self._color = yiq_to_rgb(value)
 
+    @property
+    def hsv(self):
+        """ An HSV representation of the color """
+        return rgb_to_hsv(self.rgb)
 
-def rgb_to_hex(rgb):
-    """
-    Convert a tuple containing RGB values into a corresponding HEX representation.
+    @hsv.setter
+    def hsv(self, value):
+        self._color = hsv_to_rgb(value)
 
-    :param rgb:
-    :return:
-    """
-    r, g, b = rgb
-    return "#{0}{1}{2}".format(hex(r)[2:].zfill(2), hex(g)[2:].zfill(2), hex(b)[2:].zfill(2))
-
-
-def rgb_to_web(rgb):
-    """
-    Convert a RGB color tuple into a WEB color representation, being either a well-known color name if supported, or
-    the equivalent HEX value.
-
-    :param rgb:
-    :return:
-    """
-    try:
-        return web_colors[rgb]
-    except KeyError:
-        return rgb_to_hex(rgb)
-
-
-def hex_to_rgb(_hex):
-    """
-    Convert a HEX color string into a tuple containing corresponding RGB values.
-
-    :param _hex:
-    :type _hex: str
-    :return:
-    """
-    _hex = _hex.strip('#')
-    n = len(_hex) // 3
-    if len(_hex) == 3:
-        r = int(_hex[:n]*2, 16)
-        g = int(_hex[n:2 * n]*2, 16)
-        b = int(_hex[2 * n:3 * n]*2, 16)
-    else:
-        r = int(_hex[:n], 16)
-        g = int(_hex[n:2 * n], 16)
-        b = int(_hex[2 * n:3 * n], 16)
-    return r, g, b
-
-
-def hex_to_web(_hex):
-    """
-    Convert a HEX color string into a WEB color representation.
-
-    :param _hex:
-    :return:
-    """
-    try:
-        return web_colors[hex_to_rgb(_hex)]
-    except KeyError:
-        return _hex
-
-
-def web_to_rgb(web):
-    """
-    Convert a WEB color representation into an RGB color tuple.
-
-    :param web:
-    :return:
-    """
-    try:
-        return web_colors[web.lower()]
-    except KeyError:
-        return hex_to_rgb(web)
-
-
-def web_to_hex(web):
-    """
-    Convert a WEB color representation into a HEX color string.
-
-    :param web:
-    :return:
-    """
-    try:
-        return rgb_to_hex(web_colors[web])
-    except KeyError:
-        return web
-
-
-def rgb_to_yiq(rgb):
-    """
-    Convert an RGB color tuple into the YIQ color representation.
-
-    :param rgb:
-    :return:
-    """
-    try:
-        r, g, b = rgb
-        y = (0.299 * r) + (0.587 * g) + (0.114 * b)
-        i = (0.596 * r) + (-0.275 * g) + (-0.321 * b)
-        q = (0.212 * r) + (-0.528 * g) + (0.311 * b)
-        return y, i, q
-    except Exception as e:
-        raise ColorException('Unable to convert RGB to YIQ: ' + e.message)
 
 # -----------------------------------------------
 # Utility Functions
@@ -307,7 +200,7 @@ def rgb_to_yiq(rgb):
 # - - - - - - - - - - - - - - -
 
 
-def uniform_random_rgb():
+def random_rgb():
     """
     Generate a uniformly random RGB value.
 
@@ -316,22 +209,22 @@ def uniform_random_rgb():
     return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
 
 
-def uniform_random_hex():
+def random_hex():
     """
     Generate a uniformly random HEX value.
 
     :return: A string representing a random HEX value between 000000 and FFFFFF inclusive
     """
-    return rgb_to_hex(uniform_random_rgb())
+    return rgb_to_hex(random_rgb())
 
 
-def uniform_random_web():
+def random_web():
     """
     Generate a uniformly random WEB value.
 
     :return:
     """
-    return rgb_to_web(uniform_random_rgb())
+    return rgb_to_web(random_rgb())
 
 
 def offset_random_rgb(seed, amount=1):
@@ -448,4 +341,4 @@ def minify_hex(_hex):
         else:
             return _hex
     else:
-        raise ColorException('Unexpected HEX size when minifying.')
+        raise ColorException('Unexpected HEX size when minifying: {}'.format(size))
