@@ -9,9 +9,9 @@ currently uses an internal RGB representation, but has allowances for RGB, HEX, 
 from __future__ import division
 import random
 
-from static import *
-from equality import RGB_eq
-from convert import *
+from .static import *
+from .equality import RGB_eq
+from .convert import *
 
 
 class Format:

@@ -4,8 +4,8 @@
 A collection of color-space conversion functions.
 """
 from __future__ import division
-from static import web_colors
-from exceptions import *
+from .static import web_colors
+from .exceptions import *
 
 
 # --------------------

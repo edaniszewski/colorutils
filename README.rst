@@ -32,7 +32,10 @@ to update an existing installation from pypi to the latest version::
 1. Current Features
 ===================
 
-**v0.2** (in development)
+**v0.2.1** (released 05/25/2015)
+- Bug fix for pip install on Windows for unfound packages
+
+**v0.2** (released 05/23/2015)
 
 - Add HSV color representation and conversions
 - Add YIQ color representation and conversions
@@ -41,7 +44,7 @@ to update an existing installation from pypi to the latest version::
 - Addition of pre-defined color palettes
 - Package restructuring
 
-**v0.1** (released)
+**v0.1** (released 05/16/2015)
 
 - A versatile abstract color model which allows color addition and subtraction
 - Conversions between: ``RGB`` tuples, 6-character ``HEX`` strings, 3-character ``HEX`` strings, and ``WEB`` representations of color.
