@@ -33,6 +33,7 @@ to update an existing installation from pypi to the latest version::
 ===================
 
 **v0.2.1** (released 05/25/2015)
+
 - Bug fix for pip install on Windows for unfound packages
 
 **v0.2** (released 05/23/2015)
